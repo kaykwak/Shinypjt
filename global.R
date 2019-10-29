@@ -112,6 +112,12 @@ rating <- unique(nb.by.categ$Rating)
 pay.type <- as.character(unique(df$Type))
 installed <- as.character(unique(df$Installs.update))
 
+df.rm.na.rate <- df[df$Rating!="NaN",]
+fit <- density(df.rm.na.rate$Rating)
+df_rate.over3 <- df %>% filter(., Rating >= 3)
+
 
 window_height <- JS('window.innerHeight') 
 window_width <- JS('window.innerWidth') 
+
+

@@ -118,8 +118,72 @@ shinyServer(function(input, output){
              margin = list( l = 5, r = 5, b = 20, t = 40,  pad = 4) )
   })
   
-
   
+  
+
+  output$Rating.hist <- renderPlotly({
+    plot_ly(x=df$Rating, type = "histogram", name = "User Rating Histogram") %>% 
+      add_trace(x = fit$x, y = fit$y, type = "scatter", mode = "lines", fill = "tozeroy", 
+                fillcolor = 'rgba(168, 150, 234, 0.5)', 
+                yaxis = "y2", name = "Density") %>% 
+      layout(paper_bgcolor= 'lightgray',
+             plot_bgcolor='rgba(0,0,0,0)',
+             title = "<b>[ Distribution of User Ratings ]</b>", 
+             xaxis = list(title = "User Rating", showgrid = TRUE, 
+                          gridcolor = 'rgb(200,200,200)', showline = FALSE, showticklabels = TRUE,
+                          tickcolor = 'rgb(127,127,127)', ticks = 'outside', zeroline = FALSE),  
+             yaxis2 = list(title = "Counts", overlaying = "N", side = "right", 
+                           gridcolor = 'rgb(255,255,255)', showgrid = FALSE, showline = FALSE,
+                           showticklabels = FALSE, tickcolor = 'rgb(127,127,127)',
+                           ticks = 'outside',zeroline = FALSE),
+             legend = list(x = 0.1, y = 0.7, bgcolor="white"),
+             margin = list( l = 5, r = 5, b = 30, t = 40,  pad = 4) ) 
+  })
+  
+  
+  output$Rating.Type <- renderPlotly({
+    plot_ly(x = df$Type, y = ~df$Rating, color = ~df$Type, type = "box") %>% 
+      layout(paper_bgcolor= 'lightgray', plot_bgcolor='rgba(0,0,0,0)',
+             title = "<b>[ Box Plot ]</b>", 
+             margin = list( l = 5, r = 5, b = 30, t = 40,  pad = 4) , 
+             yaxis = list(title = "user rating", size = 8, side = "left"), 
+             legend = list(orientation = 'h')) 
+  })
+  
+  output$Rating.Type.over3 <- renderPlotly({
+    plot_ly(x = df_rate.over3$Type, y = ~df_rate.over3$Rating, color = ~df_rate.over3$Type,
+            colors = "Dark2", type = "box") %>% 
+      layout(paper_bgcolor= 'lightgray', plot_bgcolor='rgba(0,0,0,0)',
+             title = "<b>[ Box Plot</b> (rating >= 3.0) <b>]</b>", 
+             margin = list( l = 5, r = 5, b = 30, t = 40,  pad = 4) , 
+             yaxis = list(title = "user rating", size = 8, side = "left"), 
+             legend = list(orientation = 'h')) 
+  })
+  
+  
+  output$Rating.by.categ <- renderPlotly({
+    plot_ly(x = reorder(df.rm.na.rate$Category, -df.rm.na.rate$Rating, FUN=median),
+            y = ~df.rm.na.rate$Rating, type = "box", color = ~df.rm.na.rate$Category ) %>%
+      layout(paper_bgcolor= 'lightgray', plot_bgcolor='rgba(0,0,0,0)',
+             title = "<b>[ User Rating by Category ]</b>", showlegend = FALSE,
+            margin = list( l = 5, r = 5, b = 30, t = 40,  pad = 4),
+            yaxis = list(title = "user rating", size = 8, side = "left")) 
+  })
+  
+  
+  output$Rating.by.categ.over3 <- renderPlotly({
+    plot_ly(x = reorder(df_rate.over3$Category, -df_rate.over3$Rating, FUN=median),
+            y = ~df_rate.over3$Rating, type = "box",
+            color = ~df_rate.over3$Category) %>%
+      layout(paper_bgcolor= 'lightgray', plot_bgcolor='rgba(0,0,0,0)',
+             title = "<b>[ User Rating by Category</b> (rating >= 3.0) <b>]</b>", showlegend = FALSE,
+             margin = list( l = 5, r = 5, b = 30, t = 40,  pad = 4), 
+             yaxis = list(title = "user rating", size = 8, side = "left"))
+  })
+  
+  
+  
+   
   
  # Serch App
   
@@ -174,4 +238,19 @@ shinyServer(function(input, output){
 
   })
 
+
+## Download data
+
+  output$df <- downloadHandler(
+  filename = function() {
+    paste('data-', Sys.Date(), '.csv', sep='')
+  },
+  content = function(file) {
+    write.csv(df, file)
+  }
+)
+  
+  
 })
+
+

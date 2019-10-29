@@ -13,9 +13,13 @@ shinyUI(dashboardPage(
       br() ,
       fluidRow(
           column(width = 11,
-            actionButton(  "generate_report_modal", "Download data", icon = icon("download"),
+            # actionButton(  "df", 
+            #                label = "Download data", icon = icon("download"),
+            #                style = "width: 95%; color: #111")
+            downloadButton(  "df", 
+                           label = "Download data", icon = icon("download"),
                            style = "width: 95%; color: #111")
-          ) )
+            ) )
       )  ),
 
   dashboardBody(
@@ -28,9 +32,7 @@ shinyUI(dashboardPage(
         tabPanel("analysis",       
         tabsetPanel(
            tabPanel("Number of Apps",
-                wellPanel(style = "background-color: white;", #ffffff;",
-                # value = "page1",
-                # # fluidRow( ),
+                wellPanel(style = "background-color: white;", 
                 fluidPage(
                   box(style = "background-color: lightgray;", width = 12, height ='auto',  plotlyOutput("nb.by.categ")),
                   box(style = "background-color: lightgray;", width = 6, plotlyOutput("nb.by.categ_simp")),
@@ -39,14 +41,28 @@ shinyUI(dashboardPage(
             ),
 
           tabPanel("Number of Paid Apps",
-                wellPanel(style = "background-color: white;", #ffffff;",
+                wellPanel(style = "background-color: white;", 
                 fluidPage(
                   box(style = "background-color: lightgray;", width = 6, plotlyOutput("apps.by.pay")),
                   box(style = "background-color: lightgray;", width = 6, plotlyOutput("price.range")),
                   box(style = "background-color: lightgray;", width = 12, height ='auto',  plotOutput("type.by.categ.pay"))
                      ))
 
-        ))
+            ),
+          
+          tabPanel("User Rating",
+               wellPanel(style = "background-color: white;", 
+                 fluidPage(
+                   box(style = "background-color: lightgray;", width = 6, plotlyOutput("Rating.hist")),
+                   box(style = "background-color: lightgray;", width = 3, plotlyOutput("Rating.Type")),
+                   box(style = "background-color: lightgray;", width = 3, plotlyOutput("Rating.Type.over3")),
+                   box(style = "background-color: lightgray;", width = 12, height ='auto',  plotlyOutput("Rating.by.categ")),
+                   box(style = "background-color: lightgray;", width = 12, height ='auto',  plotlyOutput("Rating.by.categ.over3"))
+                         ))
+                   
+            )
+          
+        )
         )),
 
 
@@ -86,16 +102,7 @@ shinyUI(dashboardPage(
                                                       `live-search` = FALSE, `dropdownAlignRight` = TRUE,
                                                       `data-dropdown-align-right` = TRUE))
         ),
-        
-        # box(width = 3, height = 230,
-        #   title = "Analysis selection",
-        #   div(style="display:inline-block",
-        #     awesomeRadio("dash_metric",  label = NULL,
-        #     choices = c("Apps by category" = "nb.by.categ",   "Apps by Payment type" = "apps.by.pay"),
-        #     inline = TRUE  ))),
-        
-        
-        
+
           box( DT::dataTableOutput("search"), width = 12, options = list(style = 'overflow-x: scroll')     )
       # )
       ),
@@ -105,48 +112,6 @@ shinyUI(dashboardPage(
                #   req(nrow(out) > 0)
                #   out
                # })
-
-   
-   
-
-   
-   
-   
-   
-   #################   
-                   
-
-      
-      
-  
-        # fluidRow( valueBoxOutput("value1"), valueBoxOutput("value2"), valueBoxOutput("value3") ),
-        
-
-      #       
-      
-      
-                # box(width = 3, height = 230,
-                #   title = "Analysis selection",
-                #   div(style="display:inline-block",
-                #     awesomeRadio("dash_metric",  label = NULL,
-                #     choices = c("Apps by category" = "nb.by.categ",   "Apps by Payment type" = "apps.by.pay"),
-                #     inline = TRUE  ))),
-                # 
-                # box( width = 3, height = 370,
-                #      title = "Data Filters",
-                #      br(),
-                #      shinyWidgets::pickerInput( inputId = "categ", label = "App Category selection :", choices = categ_choices,
-                #        multiple = TRUE, selected = categ_choices,
-                #        options = list(`actions-box` = TRUE, `size` = 10, `virtual-scroll` = FALSE,
-                #          `selected-text-format` = "count > 3", `live-search` = FALSE, `dropdownAlignRight` = TRUE,
-                #          `data-dropdown-align-right` = TRUE)),
-                #      br(),
-                #      searchInput( inputId = "categ", label = "App Category search :",
-                #      placeholder = "Family",
-                #      btnReset = icon("remove"),  btnSearch = icon("search"),  width = "100%"  ) )
-
-      
-# 
 
 
       tabItem(
